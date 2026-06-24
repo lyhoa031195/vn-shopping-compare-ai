@@ -31,7 +31,7 @@ export function App() {
   const copiedText = useMemo(
     () =>
       current
-        ? `${current.summary}\n\nPros: ${current.pros.join("; ")}\nCons: ${current.cons.join("; ")}`
+        ? `${current.summary}\n\nReasons to Buy: ${current.pros.join("; ")}\nReasons to Pause: ${current.cons.join("; ")}`
         : "",
     [current],
   );
@@ -58,34 +58,34 @@ export function App() {
       <section className="mx-auto max-w-6xl px-4 py-6 sm:py-10">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-emerald-500/20 to-sky-500/10 p-5 shadow-2xl sm:p-8">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-300">
-            Frontend-only shopping helper
+            AI purchase decision checklist
           </p>
           <h1 className="mt-3 text-3xl font-black sm:text-5xl">
-            VN Shopping Compare AI
+            Purchase Advisor AI
           </h1>
           <p className="mt-3 max-w-2xl text-slate-300">
-            Compare marketplace listings with a mock AI review, practical risk
-            checks, seller questions, and saved local history. No backend, auth,
-            database, or API keys.
+            Decide whether to buy, wait, compare, or avoid with practical
+            risk checks, verification questions, and saved local decision history.
+            No backend, auth, database, or API keys.
           </p>
         </div>
 
         <div className="mt-6 grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
           <section className="rounded-3xl border border-white/10 bg-white/5 p-5">
-            <h2 className="text-xl font-bold">Product input</h2>
+            <h2 className="text-xl font-bold">Decision input</h2>
             <div className="mt-4 space-y-4">
               <label className="block">
-                <span>Product name</span>
+                <span>What are you considering?</span>
                 <input
                   value={product}
                   onChange={(e) => setProduct(e.target.value)}
-                  placeholder="iPhone 15 Pro 256GB"
+                  placeholder="Used ThinkPad X1 Carbon Gen 9"
                   className="input"
                 />
               </label>
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block">
-                  <span>Platform</span>
+                  <span>Purchase source</span>
                   <select
                     value={platform}
                     onChange={(e) => setPlatform(e.target.value)}
@@ -97,7 +97,7 @@ export function App() {
                   </select>
                 </label>
                 <label className="block">
-                  <span>Category</span>
+                  <span>Decision type</span>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
@@ -111,7 +111,7 @@ export function App() {
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block">
-                  <span>Budget / price</span>
+                  <span>Price or monthly cost</span>
                   <input
                     value={budget}
                     onChange={(e) => setBudget(e.target.value)}
@@ -120,21 +120,21 @@ export function App() {
                   />
                 </label>
                 <label className="block">
-                  <span>Seller</span>
+                  <span>Seller / provider</span>
                   <input
                     value={seller}
                     onChange={(e) => setSeller(e.target.value)}
-                    placeholder="Shop name"
+                    placeholder="Shop, provider, or course platform"
                     className="input"
                   />
                 </label>
               </div>
               <label className="block">
-                <span>Listing notes</span>
+                <span>Details, evidence, and concerns</span>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Warranty, condition, shipping, suspicious claims..."
+                  placeholder="Condition, specs, warranty, subscription limits, course syllabus, concerns..."
                   className="input min-h-28"
                 />
               </label>
@@ -142,7 +142,7 @@ export function App() {
                 onClick={analyze}
                 className="w-full rounded-2xl bg-emerald-400 px-5 py-3 font-bold text-slate-950 hover:bg-emerald-300"
               >
-                Run mock AI analysis
+                Get purchase advice
               </button>
             </div>
           </section>
@@ -156,12 +156,12 @@ export function App() {
               />
             ) : (
               <div className="rounded-3xl border border-dashed border-white/20 bg-white/5 p-8 text-center text-slate-300">
-                Enter a product to generate your first comparison.
+                Enter a purchase decision to get your first recommendation.
               </div>
             )}
             <section className="rounded-3xl border border-white/10 bg-white/5 p-5">
               <div className="flex items-center justify-between gap-3">
-                <h2 className="text-xl font-bold">Saved history</h2>
+                <h2 className="text-xl font-bold">Decision history</h2>
                 <button
                   className="text-sm text-rose-300"
                   onClick={() => setHistory([])}

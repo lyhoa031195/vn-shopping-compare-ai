@@ -9,21 +9,19 @@ export const platforms = [
   "Other",
 ];
 export const categories = [
-  "Electronics",
-  "Fashion",
-  "Home & Kitchen",
-  "Beauty",
-  "Baby & Kids",
-  "Motorbike accessories",
-  "Grocery",
-  "Other",
+  "Used Electronics",
+  "Computer Parts",
+  "Phone Upgrade",
+  "Software Subscription",
+  "Online Course",
+  "Other Purchase",
 ];
 
 const baseChecklist = [
-  "Confirm final price includes shipping and platform vouchers.",
-  "Check seller response time, rating, and recent one-star reviews.",
-  "Compare warranty terms with at least one competing listing.",
-  "Save screenshots of the listing, chat, and payment confirmation.",
+  "Confirm the final price or recurring cost before paying.",
+  "Check seller or provider reputation, recent reviews, and support terms.",
+  "Compare warranty, refund, cancellation, or return terms with one alternative.",
+  "Save screenshots of the offer, claims, chat, and payment confirmation.",
 ];
 
 type AnalysisInput = Omit<
@@ -48,67 +46,73 @@ export function buildAnalysis(form: AnalysisInput): Analysis {
     62 + (hasBudget ? 8 : 0) + (hasSeller ? 7 : 0) + detailBoost,
   );
   const categoryRisk =
-    form.category === "Electronics"
-      ? "Counterfeit, used, or grey-market stock may have limited warranty coverage."
-      : "Photos, sizing, condition, or material claims may differ from delivery.";
+    form.category === "Used Electronics"
+      ? "Used devices may have hidden battery, repair, lock, or warranty issues."
+      : form.category === "Computer Parts"
+        ? "Compatibility, power requirements, prior heavy use, or warranty gaps can change the real value."
+        : form.category === "Software Subscription"
+          ? "Recurring plans can become wasteful if usage is occasional or cancellation is difficult."
+          : "Missing proof, vague claims, or weak refund terms can make the purchase harder to reverse.";
+  const recommendation =
+    score >= 85 ? "Buy" : score >= 70 ? "Compare" : score >= 55 ? "Wait" : "Avoid";
 
   return {
     ...form,
     id: crypto.randomUUID(),
     score: Math.min(score, 95),
-    summary: `${form.product || "This product"} on ${form.platform} looks ${score > 78 ? "promising" : "worth checking carefully"} based on the details provided. Verify seller proof, warranty, and comparable prices before paying.`,
+    summary: `${recommendation}: ${form.product || "This purchase"} from ${form.platform} looks ${score > 78 ? "promising" : "worth checking carefully"} based on the details provided. Verify proof, fit, terms, and comparable options before paying.`,
     pros: [
-      `${form.platform} usually makes it easy to compare vouchers, shipping fees, and reviews.`,
-      `${form.category} listings often have multiple sellers, which helps benchmark price and warranty.`,
+      `${form.platform} gives you a source to verify price, terms, and reputation.`,
+      `${form.category} decisions benefit from comparing fit, risk, and alternatives before paying.`,
       hasBudget
         ? `Your budget of ${form.budget} gives a clear ceiling for negotiation.`
         : "You can still improve the decision by adding a target budget.",
     ],
     cons: [
-      "Mock analysis cannot verify real-time stock, seller identity, or price changes.",
-      "Promotional prices may hide higher shipping fees or weak return terms.",
+      "Mock guidance cannot verify real-time availability, identity, quality, or price changes.",
+      "Promotional pricing or persuasive claims may hide weak return, warranty, refund, or cancellation terms.",
       hasSeller
         ? `Seller "${form.seller}" still needs external review checks.`
         : "No seller name was provided for reputation checks.",
     ],
     risks: [
       categoryRisk,
-      "Listings with few original photos, vague warranty language, or pressure to pay off-platform are higher risk.",
-      "Very large discounts can indicate refurbished items, missing accessories, or replica goods.",
+      "Offers with vague evidence, unclear terms, or pressure to pay quickly are higher risk.",
+      "Very large discounts can indicate hidden defects, missing value, outdated content, or low future usefulness.",
     ],
     checklist: baseChecklist,
     questions: [
-      "Is this item authentic/new, and can you provide real photos taken today?",
-      "What warranty applies in Vietnam, and who handles repair or replacement?",
-      "What is included in the box, and are there any defects or missing accessories?",
-      "Can I return the item if it is not as described or fails initial testing?",
+      "Can you provide current proof for the condition, terms, limits, or included features?",
+      "What warranty, refund, cancellation, or support policy applies?",
+      "What exactly is included, excluded, or limited in this purchase?",
+      "Can I return, cancel, refund, or resell it if it does not meet expectations?",
     ],
     comparisons: [
       {
-        factor: "Price",
+        factor: "Cost",
         selected: hasBudget
           ? `Compare against ${form.budget}`
           : "Budget not set",
         alternative: "Check 2-3 similar listings",
-        verdict: hasBudget ? "Good anchor" : "Needs budget",
+        verdict: hasBudget ? "Compare" : "Wait",
       },
       {
-        factor: "Seller trust",
+        factor: "Seller / provider trust",
         selected: hasSeller ? form.seller : "Unknown seller",
         alternative: "Higher-rated official store",
-        verdict: hasSeller ? "Verify reviews" : "High caution",
+        verdict: hasSeller ? "Compare" : "Avoid",
       },
       {
-        factor: "Warranty",
+        factor: "Terms",
         selected: "Listing claim",
-        alternative: "Official distributor policy",
-        verdict: "Ask for written proof",
+        alternative: "Official warranty, refund, or cancellation policy",
+        verdict: "Wait",
       },
       {
-        factor: "Delivery",
+        factor: "Alternative",
         selected: form.platform,
-        alternative: "Local pickup or another marketplace",
-        verdict: "Choose trackable shipping",
+        alternative: "Keep current option or compare another provider",
+        verdict: recommendation,
       },
     ],
     createdAt: new Date().toISOString(),
