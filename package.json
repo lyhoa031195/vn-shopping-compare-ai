@@ -1,0 +1,1 @@
+{"name":"vn-shopping-compare-ai","version":"1.0.0","private":true,"type":"module","scripts":{"dev":"node scripts/build.mjs --watch","build":"node scripts/build.mjs","preview":"node scripts/preview.mjs"},"dependencies":{},"devDependencies":{}}
